@@ -1,0 +1,9 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  # 호스트(Mac)와 K8s 내부 포트 매핑 (추후 Web UI 및 테스트 앱 접속용)
+  extraPortMappings:
+  - containerPort: 80
+    hostPort: 8080
+    protocol: TCP

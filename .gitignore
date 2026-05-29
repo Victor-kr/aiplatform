@@ -1,3 +1,5 @@
 venv/
 .DS_Store
 infra/local/gitlab/
+.env
+src/bot/.env

@@ -1,0 +1,16 @@
+loki:
+  commonConfig:
+    replication_factor: 1
+  storage:
+    type: filesystem
+promtail:
+  enabled: true
+grafana:
+  enabled: true
+prometheus:
+  enabled: true
+  server:
+    persistentVolume:
+      enabled: false
+  alertmanager:
+    enabled: false

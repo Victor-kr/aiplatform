@@ -1,0 +1,28 @@
+version: '3.6'
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab-local
+    restart: always
+    hostname: 'gitlab.example.com'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://localhost:8929'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2224
+        # --- RAM 최적화 설정 (3~4GB 제한) ---
+        puma['worker_processes'] = 2
+        sidekiq['max_concurrency'] = 10
+        postgresql['shared_buffers'] = "256MB"
+        # 불필요한 기능 Off (RAM 절약 목적)
+        gitlab_pages['enable'] = false
+        registry['enable'] = false
+        # 모니터링은 K8s 연동을 위해 켜둠
+        prometheus_monitoring['enable'] = true
+    ports:
+      - '8929:8929'
+      - '2224:22'
+    volumes:
+      - './gitlab/config:/etc/gitlab'
+      - './gitlab/logs:/var/log/gitlab'
+      - './gitlab/data:/var/opt/gitlab'
+    shm_size: '256m'

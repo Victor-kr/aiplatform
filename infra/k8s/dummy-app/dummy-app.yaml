@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dummy-app
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dummy-app
+  template:
+    metadata:
+      labels:
+        app: dummy-app
+    spec:
+      containers:
+      - name: dummy-app
+        # 가벼운 busybox를 사용해 10초마다 가짜 OOM 에러 로그를 뿜어내도록 시뮬레이션
+        image: busybox:latest
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            while true; do
+              echo "[$(date +'%Y-%m-%d %H:%M:%S')] [ERROR] org.springframework.boot.SpringApplication - Application run failed"
+              echo "java.lang.OutOfMemoryError: Java heap space"
+              sleep 10
+            done
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
